@@ -8,12 +8,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
-PROGRAMMES_DIR = DATA_DIR / "programmes"
-EXERCISES_DIR = DATA_DIR / "exercises"
-CHROMA_DIR = BASE_DIR / "data" / "chroma_db"
-PROGRESS_DB_PATH = BASE_DIR / "data" / "progress.json"
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR
+PROGRAMMES_DIR = BASE_DIR  # PDF déposés directement à la racine du dépôt (structure plate)
+EXERCISES_DIR = BASE_DIR
+CHROMA_DIR = BASE_DIR / "chroma_db"
+PROGRESS_DB_PATH = BASE_DIR / "progress.json"
 
 # --- LLM ---
 # Fournisseur : "xai" (Grok), "openai", "mistral", "groq" — tous compatibles avec le SDK openai
