@@ -4,10 +4,10 @@ Module de progression de MathGuide Bénin.
 Stocke, par élève, l'avancement sur les différents domaines de compétences.
 
 - Si SUPABASE_URL / SUPABASE_KEY sont renseignés (.env) : persistance dans Supabase
-  (tables `eleves` et `competences_progress`, voir data/supabase_migration.sql).
+  (tables `eleves` et `competences_progress`, voir supabase_migration.sql).
   Recommandé pour un déploiement sur un hébergeur au système de fichiers éphémère
   (Render, Railway, etc.).
-- Sinon : repli automatique sur un fichier JSON local (data/progress.json),
+- Sinon : repli automatique sur un fichier JSON local (progress.json),
   pratique pour le développement en local.
 """
 import json
@@ -16,8 +16,8 @@ from pathlib import Path
 from threading import Lock
 from typing import Dict, Optional
 
-from app.config import PROGRESS_DB_PATH, USE_SUPABASE, SUPABASE_URL, SUPABASE_KEY
-from app.models import EleveProgress, CompetenceProgress
+from config import PROGRESS_DB_PATH, USE_SUPABASE, SUPABASE_URL, SUPABASE_KEY
+from models import EleveProgress, CompetenceProgress
 
 _lock = Lock()
 _cache: Dict[str, EleveProgress] = {}
