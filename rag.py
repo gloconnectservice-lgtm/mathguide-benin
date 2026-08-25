@@ -1,6 +1,6 @@
 """
 Module RAG de MathGuide Bénin.
-Indexe automatiquement les PDF des programmes officiels (data/programmes/)
+Indexe automatiquement les PDF des programmes officiels (déposés à la racine du dépôt)
 dans une base ChromaDB persistante, et permet la recherche contextuelle.
 """
 import hashlib
@@ -10,7 +10,7 @@ from typing import List, Optional
 import chromadb
 from chromadb.utils import embedding_functions
 
-from app.config import (
+from config import (
     CHROMA_DIR,
     PROGRAMMES_DIR,
     EMBEDDING_MODEL,
@@ -66,7 +66,7 @@ def _decouper_en_chunks(texte: str, taille: int = RAG_CHUNK_SIZE, chevauchement:
 
 
 def indexer_programmes() -> int:
-    """Parcourt data/programmes/, découpe chaque PDF en chunks et les indexe
+    """Parcourt le dossier des programmes, découpe chaque PDF en chunks et les indexe
     dans ChromaDB (idempotent : ignore les documents déjà indexés)."""
     PROGRAMMES_DIR.mkdir(parents=True, exist_ok=True)
     collection = _get_collection()
