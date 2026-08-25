@@ -7,8 +7,8 @@ import io
 from typing import Optional
 from PIL import Image
 
-from app.config import OCR_ENGINE, OCR_LANGUAGES
-from app.models import OCRResult
+from config import OCR_ENGINE, OCR_LANGUAGES
+from models import OCRResult
 
 _easyocr_reader = None
 
