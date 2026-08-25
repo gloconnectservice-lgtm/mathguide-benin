@@ -6,10 +6,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from app.config import (
+from config import (
     APP_TITLE,
     CORS_ORIGINS,
     CLASSES,
@@ -17,7 +16,7 @@ from app.config import (
     COMPETENCES_DOMAINES,
     BASE_DIR,
 )
-from app.models import (
+from models import (
     ChatRequest,
     ChatResponse,
     OCRResult,
@@ -26,7 +25,7 @@ from app.models import (
     ProgressUpdateRequest,
     EleveProgress,
 )
-from app import llm, ocr, rag, progress
+import llm, ocr, rag, progress
 
 
 @asynccontextmanager
@@ -149,12 +148,10 @@ async def enregistrer_progression(payload: ProgressUpdateRequest):
 
 
 # ---------------------------------------------------------------------------
-# Fichiers statiques (interface web)
+# Fichiers statiques (interface web) — index.html est à la racine du dépôt
+# (structure plate, pas de sous-dossier static/)
 # ---------------------------------------------------------------------------
-
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
-
 
 @app.get("/")
 async def index():
-    return FileResponse(str(BASE_DIR / "static" / "index.html"))
+    return FileResponse(str(BASE_DIR / "index.html"))
