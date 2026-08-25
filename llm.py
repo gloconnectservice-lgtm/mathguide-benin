@@ -6,9 +6,9 @@ via LLM_PROVIDER / LLM_BASE_URL / LLM_API_KEY / LLM_MODEL (voir config.py).
 from typing import List, Optional
 from openai import AsyncOpenAI
 
-from app.config import LLM_API_KEY, LLM_BASE_URL, LLM_MODEL
-from app.prompts import SYSTEM_PROMPT, build_context_prefix
-from app.models import ChatMessage
+from config import LLM_API_KEY, LLM_BASE_URL, LLM_MODEL
+from prompts import SYSTEM_PROMPT, build_context_prefix
+from models import ChatMessage
 
 _client: Optional[AsyncOpenAI] = None
 
