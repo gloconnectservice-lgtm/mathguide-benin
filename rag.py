@@ -2,18 +2,20 @@
 Module RAG de MathGuide Bénin.
 Indexe automatiquement les PDF des programmes officiels (déposés à la racine du dépôt)
 dans une base ChromaDB persistante, et permet la recherche contextuelle.
+
+Utilise l'embedding léger natif de ChromaDB (ONNX, sans PyTorch) plutôt que
+sentence-transformers, pour rester compatible avec des hébergeurs à mémoire limitée
+(ex. palier gratuit Render : 512 Mo de RAM).
 """
 import hashlib
 from pathlib import Path
 from typing import List, Optional
 
 import chromadb
-from chromadb.utils import embedding_functions
 
 from config import (
     CHROMA_DIR,
     PROGRAMMES_DIR,
-    EMBEDDING_MODEL,
     RAG_COLLECTION_NAME,
     RAG_TOP_K,
     RAG_CHUNK_SIZE,
@@ -22,16 +24,6 @@ from config import (
 
 _chroma_client = None
 _collection = None
-_embedding_fn = None
-
-
-def _get_embedding_fn():
-    global _embedding_fn
-    if _embedding_fn is None:
-        _embedding_fn = embedding_functions.SentenceTransformerEmbeddingFunction(
-            model_name=EMBEDDING_MODEL
-        )
-    return _embedding_fn
 
 
 def _get_collection():
@@ -39,10 +31,9 @@ def _get_collection():
     if _collection is None:
         CHROMA_DIR.mkdir(parents=True, exist_ok=True)
         _chroma_client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-        _collection = _chroma_client.get_or_create_collection(
-            name=RAG_COLLECTION_NAME,
-            embedding_function=_get_embedding_fn(),
-        )
+        # Pas d'embedding_function explicite : ChromaDB utilise son modèle ONNX
+        # par défaut (léger, sans PyTorch) — adapté aux environnements à mémoire limitée.
+        _collection = _chroma_client.get_or_create_collection(name=RAG_COLLECTION_NAME)
     return _collection
 
 
@@ -66,7 +57,7 @@ def _decouper_en_chunks(texte: str, taille: int = RAG_CHUNK_SIZE, chevauchement:
 
 
 def indexer_programmes() -> int:
-    """Parcourt le dossier des programmes, découpe chaque PDF en chunks et les indexe
+    """Parcourt data/programmes/, découpe chaque PDF en chunks et les indexe
     dans ChromaDB (idempotent : ignore les documents déjà indexés)."""
     PROGRAMMES_DIR.mkdir(parents=True, exist_ok=True)
     collection = _get_collection()
